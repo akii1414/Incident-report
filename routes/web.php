@@ -32,8 +32,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/incident/download-pdf',[PdfController::class,'downloadPDF'])->name('incident.downloadPDF');
-Route::post('/incident/download-pdf', [PdfController::class, 'downloadPDF'])->name('incident.downloadPDF');
+Route::get('/incident/download-pdf/{id}',[IncidentController::class,'downloadPDF'])->name('incident.downloadPDF');
+Route::post('/incident/download-pdf/{id}', [IncidentController::class, 'downloadPDF'])->name('incident.downloadPDF');
 
 Route::resource('dashboard',IncidentController::class);
 

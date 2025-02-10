@@ -30,8 +30,8 @@
                                                 <tr>
                                                     <td> {{ $incident->id }} </td>    
                                                     <td> {{ $incident->subject }} </td>    
-                                                    <td> {{ $incident->status }} </td>    
                                                     <td> {{ $incident->description }} </td>    
+                                                    <td> {{ $incident->status }} </td>    
                                                     <td> {{ $incident->created_at }} </td>    
                                                     <td> {{ $incident->updated_at }} </td>    
                                                     <td>

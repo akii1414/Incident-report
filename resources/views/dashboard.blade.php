@@ -34,30 +34,6 @@
                                             <th colspan="2">Action</th>
                                         </tr>
                                     </thead>
-                                  {{-- <tbody>
-                                        @if ($incident_details)
-                                                <tr>
-                                                    <td>{{$incident_details->subject }}</td>
-                                                    <td>{{ $incident_details->description }}</td>
-                                                    <td>{{ $incident_details->status }}</td>
-                                                    <td>{{ $incident_details->created_at }}</td>
-                                                    <td>{{ $incident_details->updated_at }}</td>
-                                                    <td><a href="{{ route('dashboard.edit', ['dashboard' => $incident_details->id]) }}" class="btn btn-primary btn-sm">Edit</a></td>
-                                                    <td>
-                                                        <form action="{{ route('dashboard.destroy', ['dashboard' => $incident_details->id]) }}" method="POST" style="display:inline-block;">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                                        </form>
-                                                    </td>
-                                                </tr>
-                                            <tr>
-                                                <td colspan="7">No User Found!</td>
-                                            </tr>
-                                        @endif
-                                    </tbody> --}}
-                                    
-                                </table>
                             </div>
                         </div>
                     </div>

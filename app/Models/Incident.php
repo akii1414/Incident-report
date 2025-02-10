@@ -17,8 +17,8 @@ class Incident extends Model
         'impact',
         'subject',
         'status',
+        'other_steps_description',
         'steps',
-        'incident_description',
         'incident_discovery_time',
         'incident_resolved',
         'location',
@@ -26,8 +26,12 @@ class Incident extends Model
         'systems_affected',
         'users_affected',
         'additional_info',
-        'imageUpload',
+        'images',
     ];
-    
+    protected $casts = [
+        'images' => 'array',
+        'impact' => 'array',
+        'steps' => 'array',
+    ];
 }
 
