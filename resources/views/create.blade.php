@@ -4,6 +4,36 @@
             {{ __('Incident Reports') }}
         </h2>
     </x-slot>
+        <style>
+            .container {
+                background: #ffffff;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+            .mb-3 {
+                font-size: 1.1rem;
+                font-weight: bold;
+                margin-bottom: 15px;
+                border-bottom: 2px solid #ccc;
+                padding-bottom: 5px;
+            }
+            .btn-primary {
+                background-color: #007bff;
+                border-color: #007bff;
+            }
+            .btn-primary:hover {
+                background-color: #0056b3;
+            }
+            .btn-secondary {
+                background-color: #6c757d;
+            }
+            .form-control {
+            border-radius: 8px;
+            border: 1px solid #ced4da;
+            padding: 10px;
+            }
+        </style>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -13,7 +43,6 @@
                             <div class="card-header">
                                     <form id="incidentForm" method="POST" action="{{ route('dashboard.store') }}" enctype="multipart/form-data">
                                         @csrf
-
                                         <div class="border p-3 mb-4">
                                             <h6 class="mb-3"><strong>I.</strong> Incident Information</h6>
                                             <div class="row">
@@ -25,18 +54,32 @@
                                                     <label for="email" class="form-label">Email</label>
                                                     <input type="email" class="form-control" id="email" name="email" value="{{ Auth::user()->email }}" readonly>
                                                 </div>
+                                                <div class="col-md-6">
+                                                    <label for="position" class="form-label">Position Title</label>
+                                                    <input type="text" class="form-control" id="position" name="position" value="{{ Auth::user()->profile->position }}" readonly>
+                                                </div>
+                                                
+                                                <div class="col-md-6">
+                                                    <label for="division" class="form-label">Division/ Section</label>
+                                                    <input type="text" class="form-control" id="division" name="division" value="{{ Auth::user()->profile->division}}" readonly>
+                                                </div>
+                                                <br>
+                                                <br>
+                                                <br>
+                                                <br>
+                                                <div>
+                                                    <label for="additional_info" class="form-label">Subject:</label>
+                                                    <input type="text" class="form-control" id="subject" name="subject"  placeholder="Enter subject" required>
+                                                </div>
                                             </div>
                                         </div>
-
                                         <div class="border p-3 mb-4">
                                                 <h6 class="mb-3"><strong>II.</strong> Incident Description</h6>
                                                 <label for="incident_description" class="form-label">Brief Description (Include screenshots/images if available):</label>
                                                 <div id="image-upload-container">
-                                                    <div class="image-upload-group mb-2">
-                                                        <input class="form-control" type="text" name="image_descriptions[]" placeholder="Enter image description..."><br>
+                                                        <input class="form-control" type="text" name="image_descriptions[]" placeholder="Enter image description..." required>
                                                         <label for="images" class="form-label">Upload Images</label>
-                                                        <input class="form-control mb-2" type="file" name="images[]" accept="image/*"><br>
-                                                    </div>
+                                                        <input class="form-control mb-2" type="file" name="images[]" accept="image/*" required>
                                                 </div>
                                                 <button type="button" class="btn btn-sm btn-success mt-2" onclick="addImageField()">Add Another Image</button>
                                         </div>
@@ -67,17 +110,12 @@
                                                 <input type="checkbox" class="form-check-input" id="unknown" name="impact[]" value="Unknown at this time">
                                                 <label class="form-check-label" for="unknown">Unknown at this time</label>
                                             </div>
-
                                         </div>
-
                                         <div class="border p-3 mb-4">
-                                            <h6 class="mb-3"><strong>IV.</strong> Who else have been notified? <br> (Please provide name of person/s)</h6>
-                                            <div class="mb-3">
+                                            <h6 class="mb-3"><strong>IV.</strong> Who else have been notified? (Please provide name of person/s)</h6>
                                                 <label for="description" class="form-label"></label>
                                                 <input type="text" class="form-control" id="description" name="description" rows="3" placeholder="Enter a description...">
-                                            </div>
                                         </div>
-
                                         <div class="border p-3 mb-4">
                                             <h6 class="mb-3"><strong>V.</strong> What Steps Have Been Taken?</h6>
                                             <div class="form-check">
@@ -161,7 +199,7 @@
                                         </div>
 
                                         <div class="col text-end">
-                                            <button type="button " class="btn btn-secondary">Close</button>
+                                            <button type="button" class="btn btn-secondary" onclick="window.history.back();">Close</button>
                                             <button type="submit" class="btn btn-primary" form="incidentForm">Save</button>
                                         </div>
                                     </form>
@@ -172,13 +210,17 @@
             </div>
         </div>
     </div>
+
+
+    
     <script>
         function addImageField() {
             let container = document.getElementById('image-upload-container');
             let div = document.createElement('div');
-            div.classList.add('image-upload-group', 'mb-2');
+            div.classList.add('mb-2');
             div.innerHTML = `
                 <input class="form-control" type="text" name="image_descriptions[]" placeholder="Enter image description...">
+                Upload Images
                 <input class="form-control mb-2" type="file" name="images[]" accept="image/*">
             `;
             container.appendChild(div);

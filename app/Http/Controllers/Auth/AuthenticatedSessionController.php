@@ -28,9 +28,11 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
+        session(['profile_updated' => Auth::user()->profile_updated]);
+
 
         return redirect()->intended(RouteServiceProvider::HOME);
-    }
+    } 
 
     /**
      * Destroy an authenticated session.

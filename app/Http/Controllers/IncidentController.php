@@ -25,7 +25,7 @@ class IncidentController extends Controller
         $request->validate([
             'description' => 'nullable|string|max:1000',
             'status' => 'nullable|string|in:Open,Closed,In Progress',
-            'subject' => 'nullable|string|max:255',
+            'subject' => 'nullable|string|max:1000',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'image_descriptions.*' => 'nullable|string|max:255',
             'impact' => 'nullable|array',
@@ -42,13 +42,14 @@ class IncidentController extends Controller
 
         $steps = $request->steps ?? [];
         $other_steps = $request->other_steps_description ?? null;
-        if ($other_steps) {
+        
+        if ($other_steps && !in_array("Others", $steps)) {
             $steps[] = "Others";
         }
         
         $new_incident = Incident::create([
             'description' => $request->description ?? 'No description provided',
-            'subject' => $request->subject ?? 'No subject',
+            'subject' => $request->subject ?? null,
             'status' => $request->status ?? 'Open',
             'impact' => json_encode($request->impact ?? []),
             'steps' => json_encode($steps),
@@ -102,7 +103,7 @@ class IncidentController extends Controller
     {
         $incident_details = Incident::findOrFail($id);
         $validated = $request->validate([
-            'subject' => 'nullable|string|max:255',
+            'subject' => 'nullable|string|max:1000',
             'description' => 'nullable|string|max:1000',
             'status' => 'nullable|string|in:Open,Closed,In Progress',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
@@ -120,10 +121,12 @@ class IncidentController extends Controller
         ]);
     
         $steps = $request->steps ?? [];
-        $other_steps = $request->other_steps_description ?? null; 
-        if ($other_steps) {
+        $other_steps = $request->other_steps_description ?? null;
+        
+        if ($other_steps && !in_array("Others", $steps)) {
             $steps[] = "Others";
         }
+        
         if ($request->hasFile('images')) {
             $imageData = [];
             $imageDescriptions = $request->image_descriptions ?? [];
@@ -180,6 +183,7 @@ class IncidentController extends Controller
         $incident_details->impact = json_decode($incident_details->impact, true);
         $incident_details->steps = json_decode($incident_details->steps, true);
         $pdf = PDF::loadView('pdf.incident_report', ['data' => $incident_details]);
+        $pdf->setPaper('A4', 'portrait');
         return $pdf->stream();
         // return $pdf->download('Incident_Report_' . $incident_details->id . '.pdf');
     }

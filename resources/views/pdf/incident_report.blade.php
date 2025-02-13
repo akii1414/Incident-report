@@ -5,16 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Incident Report</title>
         <style>
+             @page {
+            margin: 150px 50px; 
+        }
+
+        header {
+            position: fixed;
+            top: -120px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            height: 50px; 
+            z-index: 1000; 
+        }
+        footer {
+            position: fixed;
+            bottom: -50px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 12px;
+            font-style: italic;
+            color: gray;
+        }
+
+        .footer-page:after {
+            content: "Page " counter(page) " of " counter(pages);
+        }
             body {
                 font-family: helvetica;
                 line-height: 1.5;
                 color: #333;
+                margin: 0;
+                padding-top: 60px; 
+
             }
             .flex-container{
                 display: flex;
                 margin: 0 auto;
                 justify-content: space-around;
                 align-items: center;
+            }
+            .container{
+                position: relative; 
             }
             .logo {
                 width: 90px;
@@ -56,6 +89,9 @@
                 font-weight: bold;
                 margin-top: 20px;
             }
+            h2{
+                text-align: center;
+            }
             hr {
                 border: 1px solid;
             }
@@ -79,9 +115,22 @@
 
             }
             .table-info td {
-            padding: 1px 5px; 
-            break-inside: avoid;
-            page-break-inside: avoid;
+                border-left: 1px solid black;
+                border-right: 1px solid black;
+                padding: 1px 5px;
+                vertical-align: top;
+            }
+            .table-info tr:first-child td {
+                border-top: 1px solid black;
+            }
+
+            .table-info tr:last-child td {
+                border-bottom: 1px solid black;
+            }
+
+            .table-info a {
+                color: blue;
+                text-decoration: none;
             }
             .table-description{
                 border-collapse: collapse;
@@ -130,7 +179,7 @@
             }
         </style>
     </head>
-    <body>
+    <header>
         <div class="flex-container">
             <table>
                 <tr>
@@ -152,17 +201,49 @@
             </table>
             <hr>
         </div>
+    </header>
+    <footer>
+        <table>
+            <tr>
+                <?php date_default_timezone_set('Asia/Manila'); ?>
+                <td class="column4">
+                    <p>"Tracking the sky... Helping the country"</p>
+                </td>
+                <td class="column5">
+                    <p>{{ date('Y-m-d H:i:s') }}</p>
+                </td>
+            </tr>
+        </table>
+    </footer>
+    <body>
+
 
         <div class="container">
-            <h2>Incident Report</h2>
+            <h2 >Incident Report</h2>
             <table  class="table-info">
                 <tr>
                   <th colspan="3">I. Contact Information for this Incident</th>
                 </tr>
                 <tr>
-                  <td>Full name</td>
+                  <td>Name:</td>
                   <td colspan="2">{{ Auth::user()->name }}</td>
                 </tr>
+                <tr>
+                    <td>Position Title:</td>
+                    <td colspan="2">{{ Auth::user()->profile->position }}</td>
+                  </tr>
+                  <tr>
+                    <td>Division/Section:</td>
+                    <td colspan="2">{{ Auth::user()->profile->division }}</td>
+                  </tr>
+                  <tr>
+                    <td>Mobile Phone:</td>
+                    <td colspan="2">{{ Auth::user()->profile->mobile_number }}</td>
+                  </tr>
+                  <tr>
+                    <td>Local Phone:</td>
+                    <td colspan="2">{{ Auth::user()->profile->local_number }}</td>
+                  </tr>
                 <tr>
                   <td>Email</td>
                   <td colspan="2">{{ Auth::user()->email }}</td>
@@ -301,18 +382,6 @@
                 </tr>
             </table>
         </div>
-        <footer>
-            <table>
-                <tr>
-                    <?php date_default_timezone_set('Asia/Manila'); ?>
-                    <td class="column4">
-                        <p>"Tracking the sky... Helping the country"</p>
-                    </td>
-                    <td class="column5">
-                        <p>{{ date('Y-m-d H:i:s') }}</p>
-                    </td>
-                </tr>
-            </table>
-        </footer>
+
     </body>
 </html>
