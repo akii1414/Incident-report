@@ -97,8 +97,24 @@ class ProfileController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Profile $profile)
+    public function destroy(Request $request)
     {
-        //
+        $user = Auth::user();
+    
+        $profile = Profile::where('user_id', $user->id)->first();
+    
+        if ($profile) {
+            Incident::where('user_id', $profile->user_id)->delete();
+    
+            $profile->delete();
+        }
+    
+        Auth::logout();
+        $user->delete();
+    
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+    
+        return redirect('/')->with('status', 'Account, profile, and related incidents deleted successfully.');
     }
 }

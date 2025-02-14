@@ -49,4 +49,17 @@ class User extends Authenticatable
     {
         return $this->hasOne(Profile::class);
     }
+    public function incidents()
+    {
+        return $this->hasMany(Profile::class); 
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($user) {
+            $user->incidents()->delete();
+        });
+    }
 }
