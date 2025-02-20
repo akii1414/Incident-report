@@ -5,6 +5,7 @@ use App\Http\Controllers\PdfController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SampleController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\IncidentController;
 
 
@@ -44,7 +45,7 @@ Route::get('/incident/download-pdf/{id}',[IncidentController::class,'downloadPDF
 Route::post('/incident/download-pdf/{id}', [IncidentController::class, 'downloadPDF'])->name('incident.downloadPDF');
 
 Route::resource('dashboard',IncidentController::class);
-
+Route::get('/audit', [AuditLogController::class, 'index'])->middleware('auth');
 
 
 require __DIR__.'/auth.php';

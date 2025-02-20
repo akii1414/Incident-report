@@ -5,26 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Profile extends Model
+class AuditLog extends Model
 {
     use HasFactory;
-
     protected $fillable = [
-        'user_id',
-        'middle_name',
-        'position',
-        'division',
-        'mobile_number',
-        'local_number',
-        'gender',
-        'birthday',
+        'user_id', 'action', 'model_type', 'model_id',
+        'old_values', 'new_values', 
     ];
+
     protected $casts = [
-        'birthday' => 'date',
+        'old_values' => 'array',
+        'new_values' => 'array',
     ];
-        public function user()
+
+    public function user()
     {
         return $this->belongsTo(User::class);
     }
-
 }

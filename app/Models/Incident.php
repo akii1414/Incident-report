@@ -13,10 +13,10 @@ class Incident extends Model
     protected $table = 'incident_details';
 
     protected $fillable = [
+        'user_id',
         'description',
         'impact',
         'subject',
-        'status',
         'other_steps_description',
         'steps',
         'incident_discovery_time',
@@ -33,5 +33,9 @@ class Incident extends Model
         'impact' => 'array',
         'steps' => 'array',
     ];
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
 

@@ -17,11 +17,12 @@
                                     <h3 class="text-lg font-semibold">Incident Reports</h3>
                                     <form action="{{ route('dashboard.index') }}" method="GET" class="flex ml-8">
                                         <input type="text" name="search" class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-gray-400" 
-                                               placeholder="Search..." value="{{ request('search') }}">
+                                               placeholder="Search anything..." value="{{ request('search') }}">
                                         <button type="submit" class="ml-4 px-3 py-1 text-white text-sm font-medium rounded-lg shadow bg-black">
                                             Search
                                         </button>
                                     </form>
+                                    
                                 </div>
                                 <button id="create-button" class="px-4 py-2 text-white text-sm font-medium rounded-lg shadow bg-black">
                                     Create
@@ -32,9 +33,10 @@
                                 <table class="w-full border border-gray-300 shadow-sm text-left">
                                     <thead class="bg-gray-200 text-gray-700">
                                         <tr class="border-b">
-                                            <th class="px-6 py-3">Incident ID</th>
+                                            <th class="px-6 py-3">ID</th>
                                             <th class="px-6 py-3">Subject</th>
                                             <th class="px-6 py-3">Name</th>
+                                            <th class="px-6 py-3">Resolve</th>
                                             <th class="px-6 py-3">Created At</th>
                                             <th class="px-6 py-3">Last Update</th>
                                             <th class="px-6 py-3 text-center" colspan="4">Action</th>
@@ -44,17 +46,25 @@
                                     <tbody class="text-gray-800">
                                         @foreach ($incident_details as $incident)
                                             <tr class="border-b hover:bg-gray-100">
-                                                <td class="px-6 py-3">{{ $incident->id }}</td>    
-                                                <td class="px-6 py-3">{{ $incident->subject }}</td>    
-                                                <td class="px-6 py-3">{{ Auth::user()->name }}</td>    
+                                                <td class="px-6 py-3">{{ $incident->user_id }}</td>    
+                                                <td class="px-6 py-3">{{ $incident->subject }}</td>
+                                                <td class="px-6 py-3">{{ $incident->user->full_name ?? 'N/A' }}</td>
+                                                <td class="px-6 py-3">{{ $incident->incident_resolved }}</td>      
                                                 <td class="px-6 py-3">{{ $incident->created_at }}</td>    
                                                 <td class="px-6 py-3">{{ $incident->updated_at }}</td>    
                                                 <td class="px-6 py-3">
-                                                    <a href="{{ route('dashboard.edit', ['dashboard' => $incident->id]) }}" 
-                                                        class="px-4 py-2 text-white text-sm rounded-md shadow bg-black">
-                                                         Edit
-                                                     </a>
-                                                </td>    
+                                                    @if (Auth::id() === $incident->user_id)
+                                                        <a href="{{ route('dashboard.edit', ['dashboard' => $incident->id]) }}" 
+                                                           class="px-4 py-2 text-white text-sm rounded-md shadow bg-black">
+                                                           Edit
+                                                        </a>
+                                                    @else
+                                                        <button class="px-4 py-2 text-white bg-black text-sm rounded-md shadow cursor-not-allowed"
+                                                                onclick="alert('You are not allowed to edit this incident.')">
+                                                            Edit
+                                                        </button>
+                                                    @endif
+                                                </td>   
                                                 <td class="px-6 py-3">
                                                     <a href="{{ route('incident.downloadPDF', ['id' => $incident->id]) }}" 
                                                         class="px-4 py-2 bg-gray-500 text-white text-sm rounded-md shadow hover:bg-gray-700 transition">
@@ -62,14 +72,21 @@
                                                     </a>
                                                 </td>
                                                 <td class="px-6 py-3">
-                                                    <form action="{{ route('dashboard.destroy', ['dashboard' => $incident->id]) }}" method="POST">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" 
-                                                                class="px-4 py-2 bg-red-600 text-white text-sm rounded-md shadow hover:bg-red-800 transition">
+                                                    @if (Auth::id() === $incident->user_id)
+                                                        <form action="{{ route('dashboard.destroy', ['dashboard' => $incident->id]) }}" method="POST" class="delete-form">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" 
+                                                                    class="px-4 py-2 bg-red-600 text-white text-sm rounded-md shadow hover:bg-red-800 transition delete-btn">
+                                                                Delete
+                                                            </button>
+                                                        </form>
+                                                    @else
+                                                        <button class="px-4 py-2 bg-red-600 text-white text-sm rounded-md shadow hover:bg-red-800 transition cursor-not-allowed"
+                                                                onclick="alert('You are not allowed to delete this incident.')">
                                                             Delete
                                                         </button>
-                                                    </form>
+                                                    @endif
                                                 </td>
                                             </tr>                
                                         @endforeach
@@ -114,5 +131,16 @@
                 document.getElementById('profile-modal').classList.add('hidden');
             });
         });
+        document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.delete-form').forEach(form => {
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent immediate form submission
+            if (confirm('Are you sure you want to delete this incident?')) {
+                this.submit();
+            }
+        });
+    });
+});
+
     </script>
 </x-app-layout>

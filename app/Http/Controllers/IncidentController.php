@@ -9,9 +9,24 @@ use Illuminate\Support\Facades\Storage;
 
 class IncidentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $incident_details = Incident::all();
+        $incident_details = Incident::with('user')->latest()->get();
+        $query = Incident::with('user.profile');
+
+        if ($search = $request->input('search')) {
+            $query->where('id', 'like', "%$search%")
+                  ->orWhere('subject', 'like', "%$search%")
+                  ->orWhere('incident_resolved', 'like', "%$search%")
+                  ->orWhereDate('created_at', $search)
+                  ->orWhereHas('user.profile', function ($q) use ($search) {
+                      $q->where('first_name', 'like', "%$search%")
+                        ->orWhere('middle_name', 'like', "%$search%")
+                        ->orWhere('last_name', 'like', "%$search%");
+                  });
+        }
+    
+        $incident_details = $query->latest()->paginate(10);
         return view('index', compact('incident_details'));
     }
     
@@ -24,7 +39,6 @@ class IncidentController extends Controller
     {
         $request->validate([
             'description' => 'nullable|string|max:1000',
-            'status' => 'nullable|string|in:Open,Closed,In Progress',
             'subject' => 'nullable|string|max:1000',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'image_descriptions.*' => 'nullable|string|max:255',
@@ -48,9 +62,9 @@ class IncidentController extends Controller
         }
         
         $new_incident = Incident::create([
+            'user_id' => auth()->id(), 
             'description' => $request->description ?? 'No description provided',
             'subject' => $request->subject ?? null,
-            'status' => $request->status ?? 'Open',
             'impact' => json_encode($request->impact ?? []),
             'steps' => json_encode($steps),
             'incident_discovery_time' => $request->incident_discovery_time,
@@ -85,27 +99,27 @@ class IncidentController extends Controller
     
     public function show($id)
     {
-        $incident_details = Incident::findOrFail($id);
-        $incident_details->impact = json_decode($incident_details->impact, true);
-        $incident_details->steps = json_decode($incident_details->steps, true);
-        $incident_details->images = json_decode($incident_details->images, true);  
 
-        return view('show', compact('incident_details'));
     }
     
     public function edit(string $id)
     {
-        $incident = Incident::findOrFail($id);
+        $incident = Incident::where('id', $id)->where('user_id', auth()->id())->firstOrFail();
+        if ($incident->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized action.');
+        }
         return view('edit', compact('incident'));
     }
 
     public function update(Request $request, string $id)
     {
-        $incident_details = Incident::findOrFail($id);
+        $incident_details = Incident::where('id', $id)->where('user_id', auth()->id())->firstOrFail();
+        if ($incident_details->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized action.');
+        }
         $validated = $request->validate([
             'subject' => 'nullable|string|max:1000',
             'description' => 'nullable|string|max:1000',
-            'status' => 'nullable|string|in:Open,Closed,In Progress',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'image_descriptions.*' => 'nullable|string|max:255',
             'impact' => 'nullable|array',
@@ -147,7 +161,6 @@ class IncidentController extends Controller
         $incident_details->update([
             'subject' => $validated['subject'] ?? $incident_details->subject,
             'description' => $validated['description'] ?? $incident_details->description,
-            'status' => $validated['status'] ?? $incident_details->status,
             'impact' => json_encode($validated['impact'] ?? json_decode($incident_details->impact, true)),
             'steps' => json_encode($steps),
             'incident_discovery_time' => $validated['incident_discovery_time'] ?? $incident_details->incident_discovery_time,
@@ -166,8 +179,10 @@ class IncidentController extends Controller
 
     public function destroy($id)
     {
-        $incident_details = Incident::findOrFail($id);
-
+        $incident_details = Incident::where('id', $id)->where('user_id', auth()->id())->firstOrFail();
+        if ($incident->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized action.');
+        }
         if ($incident_details->images) {
             foreach (json_decode($incident_details->images) as $image) {
                 Storage::disk('public')->delete($image->path);
@@ -179,7 +194,7 @@ class IncidentController extends Controller
 
     public function downloadPDF($id)
     {
-        $incident_details = Incident::findOrFail($id);
+        $incident_details = Incident::findOrFail($id); 
         $incident_details->impact = json_decode($incident_details->impact, true);
         $incident_details->steps = json_decode($incident_details->steps, true);
         $pdf = PDF::loadView('pdf.incident_report', ['data' => $incident_details]);

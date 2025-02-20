@@ -48,9 +48,9 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <label for="fullName" class="form-label">Full Name</label>
-                                                    <input type="text" class="form-control" id="fullName" name="fullName" value="{{ Auth::user()->name }}" readonly>
-                                                </div>
-                                                <div class="col-md-6">
+                                                    <input type="text" class="form-control" id="fullName" name="fullName" value="{{ Auth::user()->full_name ?? 'N/A' }}" readonly>
+                                                </div>                             
+                                                    <div class="col-md-6">
                                                     <label for="email" class="form-label">Email</label>
                                                     <input type="email" class="form-control" id="email" name="email" value="{{ Auth::user()->email }}" readonly>
                                                 </div>

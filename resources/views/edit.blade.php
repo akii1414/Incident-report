@@ -49,7 +49,7 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <label for="fullName" class="form-label">Full Name</label>
-                                                    <input type="text" class="form-control" id="fullName" name="fullName" value="{{ Auth::user()->name }}" readonly>
+                                                    <input type="text" class="form-control" id="fullName" name="fullName" value="{{ Auth::user()->full_name ?? 'N/A' }}" readonly>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="email" class="form-label">Email</label>
@@ -156,7 +156,7 @@
                                             <br>
                                             <div class="form-group">
                                                 <label for="systems_affected" class="form-label">Approximate number of systems affected by the incident:</label>
-                                                <input type="number" class="form-control" id="systems_affected" name="systems_affected" placeholder="Enter number of systems affected" value="{{ $incident->system_affected }}">
+                                                <input type="number" class="form-control" id="systems_affected" name="systems_affected" placeholder="Enter number of systems affected" value="{{ $incident->systems_affected }}">
                                             </div>
                                             <br>
                                             <div class="form-group">

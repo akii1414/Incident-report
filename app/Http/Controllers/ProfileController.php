@@ -47,10 +47,8 @@ class ProfileController extends Controller
 
     public function edit()
     {
-        $user = Auth::user();
-        $profile = $user->profile;
-    
-        return view('profile.edit', compact('user', 'profile'));
+        $user = Auth::user()->load('profile');
+        return view('profile.edit', compact('user'));
     }
     
     
@@ -64,23 +62,20 @@ class ProfileController extends Controller
         $request->validate([
             'position' => 'nullable|string',
             'division' => 'nullable|string',
-            'first_name' => 'nullable|string',
             'middle_name' => 'nullable|string',
-            'last_name' => 'nullable|string',
-            'mobile_phone' => 'nullable|string|max:20',
-            'local_phone' => 'nullable|string|max:20',
+            'mobile_number' => 'nullable|string|max:20', 
+            'local_number' => 'nullable|string|max:20',   
             'birthday' => 'nullable|date',
             'gender' => 'nullable|string|in:Male,Female,Other',
         ]);
+        
     
         $user->profile()->updateOrCreate(
             ['user_id' => $user->id],
             [
                 'position' => $request->position,
                 'division' => $request->division,
-                'first_name' => $request->first_name,
                 'middle_name' => $request->middle_name,
-                'last_name' => $request->last_name,
                 'mobile_number' => $request->mobile_number,
                 'local_number' => $request->local_number,
                 'birthday' => $request->birthday,
@@ -91,7 +86,7 @@ class ProfileController extends Controller
         $user->profile_updated = true;
         $user->save();
     
-        return redirect()->route('dashboard.index')->with('success', 'Profile updated successfully.');
+        return redirect()->route('profile.edit')->with('status', 'profile-updated');
     }
     
     /**

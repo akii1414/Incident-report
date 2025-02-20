@@ -10,8 +10,8 @@ class CreateIncidentDetailsTable extends Migration
     {
         Schema::create('incident_details', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade'); 
             $table->string('description');
-            $table->string('status');
             $table->string('subject');
             $table->json('impact')->nullable();
             $table->text('other_steps_description')->nullable(); 

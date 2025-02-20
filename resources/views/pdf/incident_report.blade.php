@@ -226,27 +226,27 @@
                 </tr>
                 <tr>
                   <td>Name:</td>
-                  <td colspan="2">{{ Auth::user()->name }}</td>
+                  <td colspan="2">{{ $data->user->profile->full_name }}</td>
                 </tr>
                 <tr>
                     <td>Position Title:</td>
-                    <td colspan="2">{{ Auth::user()->profile->position }}</td>
+                    <td colspan="2">{{ $data->user->profile->position }}</td>
                   </tr>
                   <tr>
                     <td>Division/Section:</td>
-                    <td colspan="2">{{ Auth::user()->profile->division }}</td>
+                    <td colspan="2">{{ $data->user->profile->division }}</td>
                   </tr>
                   <tr>
                     <td>Mobile Phone:</td>
-                    <td colspan="2">{{ Auth::user()->profile->mobile_number }}</td>
+                    <td colspan="2">{{ $data->user->profile->mobile_number }}</td>
                   </tr>
                   <tr>
                     <td>Local Phone:</td>
-                    <td colspan="2">{{ Auth::user()->profile->local_number }}</td>
+                    <td colspan="2">{{ $data->user->profile->local_number }}</td>
                   </tr>
                 <tr>
                   <td>Email</td>
-                  <td colspan="2">{{ Auth::user()->email }}</td>
+                  <td colspan="2">{{ $data->user->email }}</td>
                 </tr>
             </table>
               <br>
