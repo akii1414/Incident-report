@@ -38,13 +38,13 @@
 
             <div class="col-md-6">
                 <x-input-label for="position" :value="__('Position Title')" />
-                <x-text-input id="position" name="position" type="text" class="mt-1 block w-full" :value="old('position', optional($user->profile)->position)" />
+                <x-text-input id="position" name="position" type="text" class="mt-1 block w-full" :value="old('position', optional($user->profile)->position)" required/>
                 <x-input-error class="mt-2" :messages="$errors->get('position')" />
             </div>
 
             <div class="col-md-6">
                 <x-input-label for="division" :value="__('Division/ Section')" />
-                <select id="division" name="division" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                <select id="division" name="division" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
                     <option value="">Select Division</option>
                     <option value="Network" {{ old('division', optional($user->profile)->division) == 'Network' ? 'selected' : '' }}>Network</option>
                     <option value="Server" {{ old('division', optional($user->profile)->division) == 'Server' ? 'selected' : '' }}>Server</option>
@@ -55,13 +55,13 @@
 
             <div class="col-md-6">
                 <x-input-label for="mobile_number" :value="__('Mobile Phone')" />
-                <x-text-input id="mobile_number" name="mobile_number" type="number" class="mt-1 block w-full" :value="old('mobile_number', optional($user->profile)->mobile_number)" />
+                <x-text-input id="mobile_number" name="mobile_number" type="text" class="mt-1 block w-full" :value="old('mobile_number', optional($user->profile)->mobile_number)" required pattern="\d{11}" maxlength="11" />
                 <x-input-error class="mt-2" :messages="$errors->get('mobile_number')" />
             </div>
 
             <div class="col-md-6">
                 <x-input-label for="local_number" :value="__('Local Phone')" />
-                <x-text-input id="local_number" name="local_number" type="number" class="mt-1 block w-full" :value="old('local_number', optional($user->profile)->local_number)" />
+                <x-text-input id="local_number" name="local_number" type="text" class="mt-1 block w-full" :value="old('local_number', optional($user->profile)->local_number)" required pattern="\d{4}" maxlength="4"  />
                 <x-input-error class="mt-2" :messages="$errors->get('local_number')" />
             </div>
 

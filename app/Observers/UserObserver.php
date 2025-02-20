@@ -28,14 +28,17 @@ class UserObserver
      */
     public function updated(User $user): void
     {
+
         AuditLog::create([
             'user_id' => Auth::id(),
             'action' => 'updated',
             'model_type' => get_class($user),
             'model_id' => $user->id,
-            'old_values' => json_encode($user->getOriginal()), 
-            'new_values' => json_encode($user->getChanges()),   
+            'old_values' => json_encode($user->getOriginal()),
+            'new_values' => $user->getChanges(),
+
         ]);
+        
     }
 
     /**

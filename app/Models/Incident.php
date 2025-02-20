@@ -14,6 +14,7 @@ class Incident extends Model
 
     protected $fillable = [
         'user_id',
+        'incident_id',
         'description',
         'impact',
         'subject',
@@ -37,5 +38,16 @@ class Incident extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public static function boot()
+    {
+        parent::boot();
+    
+        static::creating(function ($incident) {
+            if ($incident->user_id) {
+                $incident->incident_id = now()->format('Y/m/d') . '_' . $incident->user_id . '_IR_ICT';
+            }
+        });
+    }
+    
 }
 

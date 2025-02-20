@@ -63,6 +63,7 @@ class IncidentController extends Controller
         
         $new_incident = Incident::create([
             'user_id' => auth()->id(), 
+            'incident_id' => null, 
             'description' => $request->description ?? 'No description provided',
             'subject' => $request->subject ?? null,
             'impact' => json_encode($request->impact ?? []),
@@ -180,7 +181,7 @@ class IncidentController extends Controller
     public function destroy($id)
     {
         $incident_details = Incident::where('id', $id)->where('user_id', auth()->id())->firstOrFail();
-        if ($incident->user_id !== auth()->id()) {
+        if ($incident_details->user_id !== auth()->id()) {
             abort(403, 'Unauthorized action.');
         }
         if ($incident_details->images) {

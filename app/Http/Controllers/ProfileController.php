@@ -63,8 +63,8 @@ class ProfileController extends Controller
             'position' => 'nullable|string',
             'division' => 'nullable|string',
             'middle_name' => 'nullable|string',
-            'mobile_number' => 'nullable|string|max:20', 
-            'local_number' => 'nullable|string|max:20',   
+            'mobile_number' => 'required|string|size:11|regex:/^\d{11}$/', 
+            'local_number' => 'required|string|size:4|regex:/^\d{4}$/',  
             'birthday' => 'nullable|date',
             'gender' => 'nullable|string|in:Male,Female,Other',
         ]);

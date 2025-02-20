@@ -225,8 +225,12 @@
                   <th colspan="3">I. Contact Information for this Incident</th>
                 </tr>
                 <tr>
+                    <td>Incident ID: </td>
+                    <td colspan="2">{{ $data->incident_id }}</td>
+                </tr>
+                <tr>
                   <td>Name:</td>
-                  <td colspan="2">{{ $data->user->profile->full_name }}</td>
+                  <td colspan="2">{{ $data->user->full_name }}</td>
                 </tr>
                 <tr>
                     <td>Position Title:</td>
@@ -250,7 +254,6 @@
                 </tr>
             </table>
               <br>
-
             <table class="table-description">
                 <tr>
                   <th colspan="3">II. Incident Description</th>

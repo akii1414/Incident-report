@@ -29,10 +29,10 @@
                         <td>{{ class_basename($log->model_type) }}</td>
                         <td>{{ $log->model_id }}</td>
                         <td>
-                            <pre>{{ json_encode(json_decode($log->old_values), JSON_PRETTY_PRINT) }}</pre>
+                            <pre>{{ json_encode(json_decode($log->old_values, true), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) }}</pre>
                         </td>
                         <td>
-                            <pre>{{ json_encode(json_decode($log->new_values), JSON_PRETTY_PRINT) }}</pre>
+                            <pre>{{ is_array($log->new_values) ? json_encode($log->new_values, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) : json_encode(json_decode($log->new_values, true), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) }}</pre>
                         </td>
                         <td>{{ $log->created_at->format('Y-m-d H:i:s') }}</td>
                     </tr>
