@@ -5,7 +5,6 @@
         </h2>
     </x-slot>
     <div class="container">
-        <h2 class="mb-4">Audit Logs</h2>
     
         <table class="table table-bordered">
             <thead class="table-dark">
