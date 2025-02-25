@@ -28,11 +28,15 @@ class Incident extends Model
         'users_affected',
         'additional_info',
         'images',
+        'ongoing_time',
+        'incident_reason',
+        'other_description_ongoing',
     ];
     protected $casts = [
         'images' => 'array',
         'impact' => 'array',
         'steps' => 'array',
+        'incident_reason' => 'array',
     ];
     public function user()
     {
@@ -41,13 +45,14 @@ class Incident extends Model
     public static function boot()
     {
         parent::boot();
-    
         static::creating(function ($incident) {
-            if ($incident->user_id) {
-                $incident->incident_id = now()->format('Y/m/d') . '_' . $incident->user_id . '_IR_ICT';
-            }
+            $incident->incident_id = now()->format('Ymd') . '_PENDING_IR_ICT';
         });
-    }
+        static::created(function ($incident) {
+            $incident->incident_id = now()->format('Ymd') . '_' . $incident->id . '_IR_ICT';
+            $incident->save();
+        });
+        
     
 }
-
+}

@@ -155,49 +155,73 @@
                                                     <label for="incident_discovery_time" class="form-label">Date & Time Discovered:</label>
                                                     <input type="datetime-local" class="form-control" id="incident_discovery_time" name="incident_discovery_time">
                                                 </div>
-
+                                        
                                                 <div class="col-md-6">
                                                     <label for="incident_resolved" class="form-label">Has the incident been resolved?</label>
                                                     <div class="form-check">
-                                                        <input type="radio" class="form-check-input" id="incident_resolved_yes" name="incident_resolved" value="Yes">
+                                                        <input type="radio" class="form-check-input" id="incident_resolved_yes" name="incident_resolved" value="Yes" onclick="toggleIncidentDetails()">
                                                         <label class="form-check-label" for="incident_resolved_yes">Yes</label>
                                                     </div>
-
+                                        
                                                     <div class="form-check">
-                                                        <input type="radio" class="form-check-input" id="incident_resolved_no" name="incident_resolved" value="No">
+                                                        <input type="radio" class="form-check-input" id="incident_resolved_no" name="incident_resolved" value="No" onclick="toggleIncidentDetails()">
                                                         <label class="form-check-label" for="incident_resolved_no">No</label>
                                                     </div>
                                                 </div>
+                                        
+                                                <div class="col-md-6 mt-3" id="incident_followup_section" style="display: none;">
+                                                    <label for="ongoing_time" class="form-label">Ongoing as of:</label>
+                                                    <input type="datetime-local" class="form-control mb-3" id="ongoing_time" name="ongoing_time">
+                                        
+                                                    <label class="form-label">Reason for Unresolved Incident:</label>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="incident_reason_investigation" name="incident_reason[]" value="Investigation ongoing">
+                                                        <label class="form-check-label" for="incident_reason_investigation">Investigation ongoing</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="incident_reason_resources" name="incident_reason[]" value="Awaiting resources">
+                                                        <label class="form-check-label" for="incident_reason_resources">Awaiting resources</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="incident_reason_other" name="incident_reason[]" value="Other" onclick="toggleOtherDescription()">
+                                                        <label class="form-check-label" for="incident_reason_other">Other</label>
+                                                    </div>
+                                                    <div class="form-group" id="other_description_ongoing" style="display:none;">
+                                                        <textarea class="form-control" id="other_description_text" name="other_description_ongoing" rows="3" placeholder="Describe other..."></textarea>
+                                                    </div>
+                                                    
+                                                </div>
                                             </div>
-                                
-                                            <div class="form-group">
-                                                <label for="location" class="form-label">Physical location of affected system(s):</label>
-                                                <input type="text" class="form-control" id="location" name="location" placeholder="Enter physical location">
+                                        
+                                            <div class="row mt-3">
+                                                <div class="col-md-6">
+                                                    <label for="location" class="form-label">Physical location of affected system(s):</label>
+                                                    <input type="text" class="form-control" id="location" name="location" placeholder="Enter physical location">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="sites_affected" class="form-label">Number of sites affected by the incident:</label>
+                                                    <input type="number" class="form-control" id="sites_affected" name="sites_affected" placeholder="Enter number of sites affected">
+                                                </div>
                                             </div>
-                                            <br>
-
-                                            <div class="form-group">
-                                                <label for="sites_affected" class="form-label">Number of sites affected by the incident:</label>
-                                                <input type="number" class="form-control" id="sites_affected" name="sites_affected" placeholder="Enter number of sites affected">
+                                        
+                                            <div class="row mt-3">
+                                                <div class="col-md-6">
+                                                    <label for="systems_affected" class="form-label">Approximate number of systems affected by the incident:</label>
+                                                    <input type="number" class="form-control" id="systems_affected" name="systems_affected" placeholder="Enter number of systems affected">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="users_affected" class="form-label">Approximate number of users affected by the incident:</label>
+                                                    <input type="number" class="form-control" id="users_affected" name="users_affected" placeholder="Enter number of users affected">
+                                                </div>
                                             </div>
-                                            <br>
-
-                                            <div class="form-group">
-                                                <label for="systems_affected" class="form-label">Approximate number of systems affected by the incident:</label>
-                                                <input type="number" class="form-control" id="systems_affected" name="systems_affected" placeholder="Enter number of systems affected">
+                                        
+                                            <div class="row mt-3">
+                                                <div class="col-md-6">
+                                                    <label for="additional_info" class="form-label">Additional Information:</label>
+                                                    <input type="text" class="form-control" id="additional_info" name="additional_info" placeholder="Enter additional details...">
+                                                </div>
                                             </div>
-                                            <br>
-
-                                            <div class="form-group">
-                                                <label for="users_affected" class="form-label">Approximate number of users affected by the incident:</label>
-                                                <input type="number" class="form-control" id="users_affected" name="users_affected" placeholder="Enter number of users affected">
-                                            </div>
-                                            <br>
-
-                                            <label for="additional_info" class="form-label">Additional Information:</label>
-                                            <input type="text" class="form-control" id="additional_info" name="additional_info" rows="3" placeholder="Enter additional details...">
                                         </div>
-
                                         <div class="col text-end">
                                             <button type="button" class="btn btn-secondary" onclick="window.history.back();">Close</button>
                                             <button type="submit" class="btn btn-primary" form="incidentForm">Save</button>
@@ -240,5 +264,26 @@
                 }
             }
         });
+                function toggleOtherDescription() {
+            var otherCheckbox = document.getElementById('incident_reason_other');
+            var otherDescription = document.getElementById('other_description_ongoing');
+
+            if (otherCheckbox.checked) {
+                otherDescription.style.display = 'block';
+            } else {
+                otherDescription.style.display = 'none';
+            }
+        }
+
+        function toggleIncidentDetails() {
+        var isNo = document.getElementById("incident_resolved_no").checked;
+        var followUpSection = document.getElementById("incident_followup_section");
+
+        if (isNo) {
+            followUpSection.style.display = "block";
+        } else {
+            followUpSection.style.display = "none";
+        }
+    }
     </script>
 </x-app-layout>

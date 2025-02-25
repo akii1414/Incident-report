@@ -6,26 +6,24 @@
     <title>Incident Report</title>
         <style>
              @page {
-            margin: 150px 50px; 
+            margin: 90px 50px; 
         }
-
         header {
             position: fixed;
-            top: -120px;
+            top: -90px;
             left: 0;
             right: 0;
             text-align: center;
-            height: 50px; 
+            height: 100px; 
             z-index: 1000; 
         }
         footer {
             position: fixed;
-            bottom: -50px;
+            bottom: -80px;
             left: 0;
             right: 0;
             text-align: center;
-            font-size: 12px;
-            font-style: italic;
+            font-size: 10px;
             color: gray;
         }
 
@@ -33,57 +31,63 @@
             content: "Page " counter(page) " of " counter(pages);
         }
             body {
-                font-family: helvetica;
-                line-height: 1.5;
+                font-family: Helvetica, Arial, sans-serif;
                 color: #333;
                 margin: 0;
-                padding-top: 60px; 
+                padding-top: 75px; 
+                padding-bottom: 100px; 
 
             }
             .flex-container{
                 display: flex;
-                margin: 0 auto;
-                justify-content: space-around;
+                width: 100%;
+                justify-content: space-between;
                 align-items: center;
             }
             .container{
                 position: relative; 
             }
             .logo {
-                width: 90px;
-                height: 90px;
+                width: 100px; 
+                height: 100px;
+                display: block;
             }
             table {
                 width: 100%;
                 border-collapse: collapse;
+                
             }
             td {
-                padding: 8px;
+                padding: 5px;
                 vertical-align: top;
             }
             .column1{
                 width: 15%;
-                background-color: rgba(0, 0, 0, 0);
+                text-align: center;
+                vertical-align: middle;
             }
             .column2{
-                width:60%;
-                padding-top: 0;
-                background-color: rgba(0, 0, 0, 0);
+                width:90%;
+                text-align: left;
+                font-size: 15px;
+                vertical-align: middle;
 
             }
             .column3{
-                width: 20%;
-                text-align: right;
-                background-color: rgba(0, 0, 0, 0);
+                width: 15%;
+                text-align: center;
+                vertical-align: middle;
             }
             .column4{
                 width: 50%;
-                background-color: rgba(0, 0, 0, 0);
+                font-style: italic;
             }
             .column5{
-                width: 50%;
-                text-align: right;
-                background-color: rgba(0, 0, 0, 0);
+                width: 20%;
+            }
+            .column6{
+                width: 30%;
+                text-align: end
             }
             .section{
                 font-weight: bold;
@@ -91,20 +95,23 @@
             }
             h2{
                 text-align: center;
+                margin-top: -15px;
             }
-            hr {
+            .hr-header {
                 border: 1px solid;
+                margin: -8px;
             }
+            .hr-footer {
+                border: 1px solid;
+                margin-top: 20px; 
+                margin-bottom: 5px;      
+             }
             th{
                 border: 1px solid;
                 text-align: left;
+                padding: 5px; 
+
                 background-color: rgb(182, 179, 179);
-            }
-            footer {
-                font-size: 15px;
-                font-style: italic;
-                padding: 3px;
-                color: gray;
             }
             .table-info{
                 border-collapse: collapse;
@@ -117,7 +124,7 @@
             .table-info td {
                 border-left: 1px solid black;
                 border-right: 1px solid black;
-                padding: 1px 5px;
+                padding: 0px 5px;
                 vertical-align: top;
             }
             .table-info tr:first-child td {
@@ -174,9 +181,26 @@
                 break-inside: avoid;
                 page-break-inside: avoid;
             }
+            .column-label {
+                width: 60%;
+                vertical-align: top;
+            }
+
             .text-red{
                 color: red
             }
+            .column-hr{
+                text-align: right; 
+                font-size: 9px;
+                margin-right: 20px;
+                margin-top: 10px;
+            }
+            .incident-image {
+                width: auto;
+                max-width: 500px; 
+                height: auto;
+                max-height: 300px; }
+
         </style>
     </head>
     <header>
@@ -187,37 +211,50 @@
                         <img src="{{ public_path('/images/pagasa-logo.png') }}" alt="PAGASA LOGO" class="logo">
                     </td>
                     <td class="column2">
-                        <p><b>Republic of the Philippines<br>
-                        DEPARTMENT OF SCIENCE AND TECHNOLOGY</b><br>
-                        Philippine Atmospheric, Geophysical and Astronomical <br>
-                        Services Administration (PAGASA) <br>
-                        ETSD - METTS
+                        <?php date_default_timezone_set('Asia/Manila'); ?>
+                        <p>
+                            Republic of the Philippines<br>
+                            <b>DEPARTMENT OF SCIENCE AND TECHNOLOGY</b><br>
+                            <b>Philippine Atmospheric, Geophysical and Astronomical <br>
+                            Services Administration <br>
+                            (PAGASA) </b><br>
                         </p>
                     </td>
                     <td class="column3">
-                        <img src="{{ public_path('/images/Hi-Res-BAGONG-PILIPINAS-LOGO.png') }}" alt="BAGONG PILIPINAS LOGO" class="logo">
+                        <img src="{{ public_path('/images/Hi-Res-BAGONG-PILIPINAS-LOGO.png') }}" alt="BAGONG PILIPINAS LOGO" class="logo"><br>
                     </td>
                 </tr>
+            </div>
             </table>
-            <hr>
-        </div>
+            <hr class="hr-header">
+            <div class="column-hr"> ETSD - METTSS <br>
+                {{ date('Y-m-d H:i:s') }}</p</div>
     </header>
     <footer>
+        <hr class="hr-footer">
         <table>
             <tr>
-                <?php date_default_timezone_set('Asia/Manila'); ?>
                 <td class="column4">
                     <p>"Tracking the sky... Helping the country"</p>
                 </td>
-                <td class="column5">
-                    <p>{{ date('Y-m-d H:i:s') }}</p>
-                </td>
+                <tr>
+                    <td class="column5">
+                            <p>
+                                Science Garden Compound, Senator Miriam P. Defensor-Santiago Avenue,<br>
+                                Brgy.Central, Quezon City, Metro Manila, Philippines 1100
+                            </p>
+                    </td>
+                        <td class="column6">
+                            <p>Trunkline No.: (+632) 8284-08-00 <br>
+                                Website:  http://bagong.pagasa.dost.gov.ph</p>
+                            </p>
+                        </td>
+                    </tr>
             </tr>
         </table>
     </footer>
     <body>
-
-
+        
         <div class="container">
             <h2 >Incident Report</h2>
             <table  class="table-info">
@@ -272,7 +309,7 @@
                                 <td colspan="3">
                                     <p class="text-red" >{{ $image['image_descriptions'] }}</p>
                                     <img src="{{ storage_path('app').'/' . $image['path'] }}" 
-                                        alt="Incident Image" style="max-width: 100%; height: auto;">
+                                        alt="Incident Image" class="incident-image">
                                 </td>
                             </tr>
                         @endforeach
@@ -352,39 +389,67 @@
             </table>
             <br>
             <table class="table-details">
-                <tr >
-                  <th colspan="3">VI. Incident Details </th>
+                <tr>
+                    <th colspan="3">VI. Incident Details</th>
                 </tr>
                 <tr>
-                   <td>Date  Time the incident was discovered:</td>
-                   <td class="text-red"  colspan="2">{{ $data['incident_discovery_time'] }}</td>
+                    <td class="column-label">Date & Time the incident was discovered:</td>
+                    <td class="text-red" colspan="2">{{ $data['incident_discovery_time'] }}</td>
                 </tr>
                 <tr>
-                  <td >Has the incident been resolved:</td>
-                  <td  class="text-red" colspan="2">{{ $data['incident_resolved'] }}</td>
+                    <td class="column-label">Has the incident been resolved:</td>
+                    <td class="text-red" colspan="2">{{ $data['incident_resolved'] }}</td>
+                </tr>
+            
+                @if ($data['incident_resolved'] === "No")
+                    <tr>
+                        <td class="column-label">Ongoing Time:</td>
+                        <td class="text-red" colspan="2">{{ $data['ongoing_time'] }}</td>
+                    </tr>
+                    <tr>
+                        <td class="column-label">Reason for Unresolved Incident:</td>
+                        <td class="text-red" colspan="2">
+                            @php
+                                $incidentReasons = json_decode($data['incident_reason'], true) ?? [];
+                            @endphp
+                            @if (!empty($incidentReasons))
+                                <ul style="margin: 0; padding-left: 20px;">
+                                    @foreach ($incidentReasons as $reason)
+                                        @if ($reason !== "Other") 
+                                            <li>{{ $reason }}</li>
+                                        @endif
+                                    @endforeach
+                                    @if (!empty($data['other_description_ongoing']))
+                                        <li>{{ $data['other_description_ongoing'] }}</li>
+                                    @endif
+                                </ul>
+                            @else
+                                <p>No reasons provided.</p>
+                            @endif
+                        </td>
+                    </tr>          
+                @endif
+                <tr>
+                    <td class="column-label">Physical location of affected system(s):</td>
+                    <td class="text-red" colspan="2">{{ $data['location'] }}</td>
                 </tr>
                 <tr>
-                  <td >Physical location of affected system(s): </td>
-                  <td class="text-red" colspan="2">{{ $data['location'] }}</td>
+                    <td class="column-label">Number of sites affected by the incident:</td>
+                    <td class="text-red" colspan="2">{{ $data['sites_affected'] }}</td>
                 </tr>
                 <tr>
-                  <td >Number of sites affected by the incident: </td>
-                  <td class="text-red" colspan="2">{{ $data['sites_affected'] }}</td>
+                    <td class="column-label">Approximate number of systems affected by the incident:</td>
+                    <td class="text-red" colspan="2">{{ $data['systems_affected'] }}</td>
                 </tr>
                 <tr>
-                  <td >Approximate number of systems affected by the incident: </td>
-                  <td class="text-red" colspan="2">{{ $data['systems_affected'] }}</td>
+                    <td class="column-label">Approximate number of users affected by the incident:</td>
+                    <td class="text-red" colspan="2">{{ $data['users_affected'] }}</td>
                 </tr>
                 <tr>
-                  <td >Approximate number of users affected by the incident:  </td>
-                  <td class="text-red" colspan="2" >{{ $data['users_affected'] }}</td>
+                    <td class="column-label">Additional important information:</td>
+                    <td class="text-red" colspan="2">{{ $data['additional_info'] }}</td>
                 </tr>
-                <tr>
-                  <td >Please provide any additional information that you feel is important but has not been provided elsewhere on this form. </td>
-                  <td class="text-red" colspan="2">{{ $data['additional_info'] }}</td>
-                </tr>
-            </table>
+            </table>            
         </div>
-
     </body>
 </html>

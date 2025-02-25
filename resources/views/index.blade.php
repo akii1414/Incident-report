@@ -47,7 +47,7 @@
                                     <tbody class="text-gray-800">
                                         @foreach ($incident_details as $incident)
                                             <tr class="border-b hover:bg-gray-100">
-                                                <td class="px-6 py-3">{{ $incident->user_id }}</td>
+                                                <td class="px-6 py-3">{{ $incident->id }}</td>
                                                 <td class="px-6 py-3">{{ $incident->incident_id }}</td>       
                                                 <td class="px-6 py-3">{{ $incident->subject }}</td>
                                                 <td class="px-6 py-3">{{ $incident->user->full_name ?? 'N/A' }}</td>

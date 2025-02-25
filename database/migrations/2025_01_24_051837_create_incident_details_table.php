@@ -25,6 +25,9 @@ class CreateIncidentDetailsTable extends Migration
             $table->integer('users_affected');
             $table->json('images')->nullable(); 
             $table->text('additional_info')->nullable();
+            $table->dateTime('ongoing_time')->nullable(); 
+            $table->json('incident_reason')->nullable(); 
+            $table->text('other_description_ongoing')->nullable(); 
             $table->timestamps();
         });
         

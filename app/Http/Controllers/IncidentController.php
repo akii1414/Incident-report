@@ -52,6 +52,9 @@ class IncidentController extends Controller
             'systems_affected' => 'nullable|integer|min:0',
             'users_affected' => 'nullable|integer|min:0',
             'additional_info' => 'nullable|string|max:1000',
+            'ongoing_time' => 'nullable|date|required_if:incident_resolved,No', 
+            'incident_reason' => 'nullable|array|required_if:incident_resolved,No', 
+            'other_description_ongoing' => 'nullable|string|max:1000|required_if:incident_reason,Other', 
         ]);
 
         $steps = $request->steps ?? [];
@@ -59,6 +62,13 @@ class IncidentController extends Controller
         
         if ($other_steps && !in_array("Others", $steps)) {
             $steps[] = "Others";
+        }
+
+        $unresolvedReasons = $request->incident_reason ?? [];
+        if (in_array("Other", $unresolvedReasons)) {
+            $other_description_ongoing = $request->other_description_ongoing ?? null;
+        } else {
+            $other_description_ongoing = null;
         }
         
         $new_incident = Incident::create([
@@ -76,6 +86,9 @@ class IncidentController extends Controller
             'users_affected' => $request->users_affected ?? 0,
             'additional_info' => $request->additional_info ?? null,
             'other_steps_description' => $other_steps,
+            'ongoing_time' => $request->incident_resolved === 'No' ? $request->ongoing_time : null, 
+            'incident_reason' => json_encode($unresolvedReasons), 
+            'other_description_ongoing' => $other_description_ongoing, 
         ]);
     
         if ($request->hasFile('images')) {
@@ -115,9 +128,11 @@ class IncidentController extends Controller
     public function update(Request $request, string $id)
     {
         $incident_details = Incident::where('id', $id)->where('user_id', auth()->id())->firstOrFail();
+        
         if ($incident_details->user_id !== auth()->id()) {
             abort(403, 'Unauthorized action.');
         }
+    
         $validated = $request->validate([
             'subject' => 'nullable|string|max:1000',
             'description' => 'nullable|string|max:1000',
@@ -133,15 +148,25 @@ class IncidentController extends Controller
             'users_affected' => 'nullable|integer|min:0',
             'additional_info' => 'nullable|string|max:1000',
             'incident_discovery_time' => 'nullable|date',
+            'ongoing_time' => 'nullable|date|required_if:incident_resolved,No', 
+            'incident_reason' => 'nullable|array|required_if:incident_resolved,No', 
+            'other_description_ongoing' => 'nullable|string|max:1000|required_if:incident_reason,Other', 
         ]);
     
         $steps = $request->steps ?? [];
         $other_steps = $request->other_steps_description ?? null;
-        
+    
         if ($other_steps && !in_array("Others", $steps)) {
             $steps[] = "Others";
         }
-        
+    
+        $unresolvedReasons = $validated['incident_reason'] ?? json_decode($incident_details->incident_reason, true) ?? [];
+        $other_description_ongoing = null;
+    
+        if (in_array("Other", $unresolvedReasons)) {
+            $other_description_ongoing = $validated['other_description_ongoing'] ?? "No description provided";
+        }
+    
         if ($request->hasFile('images')) {
             $imageData = [];
             $imageDescriptions = $request->image_descriptions ?? [];
@@ -159,23 +184,32 @@ class IncidentController extends Controller
             ]);
         }
     
+        $incidentResolved = $validated['incident_resolved'] ?? $incident_details->incident_resolved;
+        $ongoingTime = isset($validated['incident_resolved']) && $validated['incident_resolved'] === 'No' 
+            ? ($validated['ongoing_time'] ?? null) 
+            : null;
+    
         $incident_details->update([
             'subject' => $validated['subject'] ?? $incident_details->subject,
             'description' => $validated['description'] ?? $incident_details->description,
             'impact' => json_encode($validated['impact'] ?? json_decode($incident_details->impact, true)),
             'steps' => json_encode($steps),
             'incident_discovery_time' => $validated['incident_discovery_time'] ?? $incident_details->incident_discovery_time,
-            'incident_resolved' => $validated['incident_resolved'] ?? $incident_details->incident_resolved,
+            'incident_resolved' => $incidentResolved,
             'location' => $validated['location'] ?? $incident_details->location,
             'sites_affected' => $validated['sites_affected'] ?? $incident_details->sites_affected,
             'systems_affected' => $validated['systems_affected'] ?? $incident_details->systems_affected,
             'users_affected' => $validated['users_affected'] ?? $incident_details->users_affected,
             'additional_info' => $validated['additional_info'] ?? $incident_details->additional_info,
             'other_steps_description' => $other_steps,
-
+            'ongoing_time' => $ongoingTime,
+            'incident_reason' => json_encode($unresolvedReasons),
+            'other_description_ongoing' => $other_description_ongoing,
         ]);
+    
         return redirect()->route('dashboard.index')->with('success', 'Incident updated successfully');
     }
+    
     
 
     public function destroy($id)

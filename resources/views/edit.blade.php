@@ -84,7 +84,7 @@
                                                     <input class="form-control mb-2" type="file" name="images[]" accept="image/*" >
                                             </div>
                                             <button type="button" class="btn btn-sm btn-success mt-2" onclick="addImageField()">Add Another Image</button>
-                                        </div>
+                                            </div>
 
                                         <div class="border p-3 mb-4">
                                             <h6 class="mb-3"><strong>III.</strong> Impact / Potential Impact</h6>
@@ -106,71 +106,102 @@
                                         <div class="border p-3 mb-4">
                                             <h6 class="mb-3"><strong>V.</strong> What Steps Have Been Taken?</h6>
                                             @php
-                                                $steps = json_decode($incident->steps, true);
-                                                $steps = is_array($steps) ? $steps : []; 
+                                                $steps = json_decode($incident->steps, true) ?? [];
                                             @endphp
-                                            @foreach (['System Disconnected from Network', 'Call NMS to report the delay', 'Updated virus definitions & scanned system', 'Log files examined (saved and secured)'] as $step)
-                                                <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input" name="steps[]" value="{{ $step }}" {{ in_array($step, $steps) ? 'checked' : '' }}>
-                                                    <label class="form-check-label">{{ $step }}</label>
-                                                </div>
+                                                @foreach (['System Disconnected from Network', 'Call NMS to report the delay', 'Updated virus definitions & scanned system', 'Log files examined (saved and secured)'] as $step)
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" name="steps[]" value="{{ $step }}" {{ in_array($step, $steps) ? 'checked' : '' }}>
+                                                        <label class="form-check-label">{{ $step }}</label>
+                                                    </div>
                                             @endforeach
                                             
                                             <div class="form-check">
-                                                <input type="checkbox" class="form-check-input" id="others" onchange="toggleOtherDescription()" {{ !empty($incident->other_steps_description) ? 'checked' : '' }}>
+                                                <input type="checkbox" class="form-check-input" id="others" name="steps[]" value="Others" onchange="toggleOtherDescription()"{{ in_array("Others", $steps) || !empty($incident->other_steps_description) ? 'checked' : '' }}>
                                                 <label class="form-check-label">Others - Please Describe Below</label>
                                             </div>
                                             
-                                            <textarea class="form-control mt-2" id="other_steps_description" name="other_steps_description" rows="3" placeholder="Describe other steps..." {{ empty($incident->other_steps_description) ? 'disabled' : '' }}>
-                                                {{ old('other_steps_description', $incident->other_steps_description ?? '') }}
-                                            </textarea>  
+                                            <textarea class="form-control mt-2" id="other_steps_description" name="other_steps_description" rows="3" placeholder="Describe other steps..."> {{ old('other_steps_description', $incident->other_steps_description) }}
+                                            </textarea>
+                                        
                                         </div>
                                         <div class="border p-3 mb-4">
                                             <h6 class="mb-3"><strong>VI.</strong> Incident Details</h6>
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <label for="incident_discovery_time" class="form-label">Date & Time Discovered:</label>
-                                                    <input type="datetime-local" class="form-control" id="incident_discovery_time" name="incident_discovery_time" value="{{ $incident->incident_discovery_time }}">
+                                                    <input type="datetime-local" class="form-control" id="incident_discovery_time" name="incident_discovery_time">
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <label class="form-label">Has the incident been resolved?</label>
+                                                    <label for="incident_resolved" class="form-label">Has the incident been resolved?</label>
                                                     <div class="form-check">
-                                                        <input type="radio" class="form-check-input" name="incident_resolved" value="Yes" {{ $incident->incident_resolved == 'Yes' ? 'checked' : '' }}>
-                                                        <label class="form-check-label">Yes</label>
+                                                        <input type="radio" class="form-check-input" id="incident_resolved_yes" name="incident_resolved" value="Yes" onclick="toggleIncidentDetails()">
+                                                        <label class="form-check-label" for="incident_resolved_yes">Yes</label>
                                                     </div>
+                                        
                                                     <div class="form-check">
-                                                        <input type="radio" class="form-check-input" name="incident_resolved" value="No" {{ $incident->incident_resolved == 'No' ? 'checked' : '' }}>
-                                                        <label class="form-check-label">No</label>
+                                                        <input type="radio" class="form-check-input" id="incident_resolved_no" name="incident_resolved" value="No" onclick="toggleIncidentDetails()">
+                                                        <label class="form-check-label" for="incident_resolved_no">No</label>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="location" class="form-label">Physical location of affected system(s):</label>
-                                                <input type="text" class="form-control" id="location" name="location" placeholder="Enter physical location" value="{{ $incident->location }}">
-                                            </div>
-                                            <br>
-                                            <div class="form-group">
-                                                <label for="sites_affected" class="form-label">Number of sites affected by the incident:</label>
-                                                <input type="number" class="form-control" id="sites_affected" name="sites_affected" placeholder="Enter number of sites affected" value="{{ $incident->sites_affected }}">
-                                            </div>
-                                            <br>
-                                            <div class="form-group">
-                                                <label for="systems_affected" class="form-label">Approximate number of systems affected by the incident:</label>
-                                                <input type="number" class="form-control" id="systems_affected" name="systems_affected" placeholder="Enter number of systems affected" value="{{ $incident->systems_affected }}">
-                                            </div>
-                                            <br>
-                                            <div class="form-group">
-                                                <label for="users_affected" class="form-label">Approximate number of users affected by the incident:</label>
-                                                <input type="number" class="form-control" id="users_affected" name="users_affected" placeholder="Enter number of users affected" value="{{ $incident->users_affected }}">
-                                            </div>
-                                            <br>
-                                            <label for="additional_info" class="form-label">Additional Information:</label>
-                                            <input type="text" class="form-control" id="additional_info" name="additional_info" rows="3" placeholder="Enter additional details..." value="{{ $incident->additional_info }}">
+                                                <div class="col-md-6 mt-3" id="incident_followup_section" style="display: none;">
+                                                    <label for="ongoing_time" style="font-weight: normal;">Ongoing as of:</label>
+                                                    <input type="datetime-local" class="form-control mb-3" id="ongoing_time" name="ongoing_time" value="{{ old('ongoing_time', $incident->ongoing_time) }}">
+                                                    <label class="form-label">Reason for Unresolved Incident:</label>
+                                                    @php
+                                                        $incident_reasons = json_decode($incident->incident_reason, true) ?? [];
+                                                    @endphp
+                                                
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="incident_reason_investigation" name="incident_reason[]" value="Investigation ongoing" {{ in_array("Investigation ongoing", $incident_reasons) ? 'checked' : '' }}>
+                                                        <label class="form-check-label" for="incident_reason_investigation">Investigation ongoing</label>
+                                                    </div>
+                                                
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="incident_reason_resources" name="incident_reason[]" value="Awaiting resources" {{ in_array("Awaiting resources", $incident_reasons) ? 'checked' : '' }}>
+                                                        <label class="form-check-label" for="incident_reason_resources">Awaiting resources</label>
+                                                    </div>
+                                                
+                                                    <div class="form-check">
+                                                        <input type="checkbox" class="form-check-input" id="incident_reason_other" name="incident_reason[]" value="Other" onclick="toggleOtherDescription()" {{ in_array("Other", $incident_reasons) ? 'checked' : '' }}>
+                                                        <label class="form-check-label" for="incident_reason_other">Other</label>
+                                                    </div>
+                                                
+                                                    <div class="form-group" id="other_description_ongoing" style="{{ in_array("Other", $incident_reasons) ? 'display:block' : 'display:none' }}">
+                                                        <textarea class="form-control" id="other_description_text" name="other_description_ongoing" rows="3" placeholder="Describe other...">{{ old('other_description_ongoing', $incident->other_description_ongoing) }}</textarea>
+                                                    </div>
+                                                </div> 
+                                                <div class="row mt-3">
+                                                    <div class="col-md-6">
+                                                        <label for="location" class="form-label">Physical location of affected system(s):</label>
+                                                        <input type="text" class="form-control" id="location" name="location" placeholder="Enter physical location" value="{{ $incident->location }}">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="sites_affected" class="form-label">Number of sites affected by the incident:</label>
+                                                        <input type="number" class="form-control" id="sites_affected" name="sites_affected" placeholder="Enter number of sites affected" value="{{ $incident->sites_affected }}">
+                                                    </div>
+                                                </div>
+                                                <div class="row mt-3">
+                                                    <div class="col-md-6">
+                                                        <label for="systems_affected" class="form-label">Approximate number of systems affected by the incident:</label>
+                                                        <input type="number" class="form-control" id="systems_affected" name="systems_affected" placeholder="Enter number of systems affected" value="{{ $incident->systems_affected }}">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="users_affected" class="form-label">Approximate number of users affected by the incident:</label>
+                                                        <input type="number" class="form-control" id="users_affected" name="users_affected" placeholder="Enter number of users affected" value="{{ $incident->users_affected }}">
+                                                    </div>
+                                                </div>
+                                                <div class="row mt-3">
+                                                    <div class="col-md-6">
+                                                        <label for="additional_info" class="form-label">Additional Information:</label>
+                                                        <input type="text" class="form-control" id="additional_info" name="additional_info" rows="3" placeholder="Enter additional details..." value="{{ $incident->additional_info }}">
+                                                    </div>
+                                                </div>
+                                            </div> 
                                         </div>
                                         <div class="col text-end">
                                             <button type="submit" class="btn btn-secondary">Close</button>
                                             <button type="submit" class="btn btn-primary" form="incidentForm">Save</button>
-                                        </div>  
+                                        </div> 
                                 </form>                           
                             </div>
                         </div>
@@ -193,15 +224,50 @@
 
         }
         function toggleOtherDescription() {
-            let otherDescriptionField = document.getElementById('other_steps_description');
-            let othersCheckbox = document.getElementById('others');
-            
-            if (othersCheckbox.checked) {
-                otherDescriptionField.disabled = false;
-            } else {
-                otherDescriptionField.disabled = true;
-                otherDescriptionField.value = ""; 
-            }
+        let checkbox = document.getElementById("others");
+        let textarea = document.getElementById("other_steps_description");
+        if (checkbox.checked || textarea.value.trim() !== "") {
+            textarea.disabled = false;
+        } else {
+            textarea.disabled = true;
         }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        toggleOtherDescription();
+    });
+
+        function toggleIncidentDetails() {
+        let isResolved = document.querySelector('input[name="incident_resolved"]:checked')?.value;
+        let followUpSection = document.getElementById("incident_followup_section");
+
+        if (isResolved === "No") {
+            followUpSection.style.display = "block";
+        } else {
+            followUpSection.style.display = "none";
+            document.getElementById("ongoing_time").value = "";
+            document.querySelectorAll('input[name="incident_reason[]"]').forEach(el => el.checked = false);
+            document.getElementById("other_description_ongoing").style.display = "none";
+            document.getElementById("other_description_text").value = "";
+        }
+    }
+
+    function toggleOtherDescription() {
+        let otherCheckbox = document.getElementById("incident_reason_other");
+        let otherDescription = document.getElementById("other_description_ongoing");
+
+        if (otherCheckbox.checked) {
+            otherDescription.style.display = "block";
+        } else {
+            otherDescription.style.display = "none";
+            document.getElementById("other_description_text").value = "";
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        toggleIncidentDetails();
+        toggleOtherDescription();
+    });
+    
     </script>
 </x-app-layout>

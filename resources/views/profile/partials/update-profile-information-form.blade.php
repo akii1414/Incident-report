@@ -77,7 +77,6 @@
                     <option value="">Select Gender</option>
                     <option value="Male" {{ old('gender', optional($user->profile)->gender) == 'Male' ? 'selected' : '' }}>Male</option>
                     <option value="Female" {{ old('gender', optional($user->profile)->gender) == 'Female' ? 'selected' : '' }}>Female</option>
-                    <option value="Other" {{ old('gender', optional($user->profile)->gender) == 'Other' ? 'selected' : '' }}>Other</option>
                 </select>
                 <x-input-error class="mt-2" :messages="$errors->get('gender')" />
             </div>

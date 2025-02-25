@@ -66,7 +66,7 @@ class ProfileController extends Controller
             'mobile_number' => 'required|string|size:11|regex:/^\d{11}$/', 
             'local_number' => 'required|string|size:4|regex:/^\d{4}$/',  
             'birthday' => 'nullable|date',
-            'gender' => 'nullable|string|in:Male,Female,Other',
+            'gender' => 'nullable|string|in:Male,Female',
         ]);
         
     
