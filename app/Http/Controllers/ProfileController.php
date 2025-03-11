@@ -99,17 +99,16 @@ class ProfileController extends Controller
         $profile = Profile::where('user_id', $user->id)->first();
     
         if ($profile) {
-            Incident::where('user_id', $profile->user_id)->delete();
-    
-            $profile->delete();
+            $profile->delete(); 
         }
     
         Auth::logout();
-        $user->delete();
+        $user->delete(); 
     
         $request->session()->invalidate();
         $request->session()->regenerateToken();
     
-        return redirect('/')->with('status', 'Account, profile, and related incidents deleted successfully.');
+        return redirect('/')->with('status', 'Account and profile deleted successfully.');
     }
+    
 }

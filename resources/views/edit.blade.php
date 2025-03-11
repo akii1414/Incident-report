@@ -98,7 +98,6 @@
                                                 </div>
                                             @endforeach
                                         </div>
-
                                         <div class="border p-3 mb-4">
                                             <h6 class="mb-3"><strong>IV.</strong> Who else has been notified? (Please provide name of person/s)</h6>
                                             <input type="text" class="form-control" id="description" name="description" value="{{ $incident->description }}" placeholder="Enter names...">
@@ -108,7 +107,7 @@
                                             @php
                                                 $steps = json_decode($incident->steps, true) ?? [];
                                             @endphp
-                                                @foreach (['System Disconnected from Network', 'Call NMS to report the delay', 'Updated virus definitions & scanned system', 'Log files examined (saved and secured)'] as $step)
+                                                @foreach (['System Disconnected from Network', 'Updated virus definitions & scanned system', 'Log files examined (saved and secured)'] as $step)
                                                     <div class="form-check">
                                                         <input type="checkbox" class="form-check-input" name="steps[]" value="{{ $step }}" {{ in_array($step, $steps) ? 'checked' : '' }}>
                                                         <label class="form-check-label">{{ $step }}</label>
@@ -129,7 +128,7 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <label for="incident_discovery_time" class="form-label">Date & Time Discovered:</label>
-                                                    <input type="datetime-local" class="form-control" id="incident_discovery_time" name="incident_discovery_time">
+                                                    <input type="datetime-local" class="form-control" id="incident_discovery_time" name="incident_discovery_time" required>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="incident_resolved" class="form-label">Has the incident been resolved?</label>
@@ -145,7 +144,7 @@
                                                 </div>
                                                 <div class="col-md-6 mt-3" id="incident_followup_section" style="display: none;">
                                                     <label for="ongoing_time" style="font-weight: normal;">Ongoing as of:</label>
-                                                    <input type="datetime-local" class="form-control mb-3" id="ongoing_time" name="ongoing_time" value="{{ old('ongoing_time', $incident->ongoing_time) }}">
+                                                    <input type="datetime-local" class="form-control" id="ongoing_time" name="ongoing_time" value="{{ old('ongoing_time', $incident->ongoing_time) }}">
                                                     <label class="form-label">Reason for Unresolved Incident:</label>
                                                     @php
                                                         $incident_reasons = json_decode($incident->incident_reason, true) ?? [];
@@ -173,21 +172,21 @@
                                                 <div class="row mt-3">
                                                     <div class="col-md-6">
                                                         <label for="location" class="form-label">Physical location of affected system(s):</label>
-                                                        <input type="text" class="form-control" id="location" name="location" placeholder="Enter physical location" value="{{ $incident->location }}">
+                                                        <input type="text" class="form-control" id="location" name="location" placeholder="Enter physical location" value="{{ $incident->location }}" required>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label for="sites_affected" class="form-label">Number of sites affected by the incident:</label>
-                                                        <input type="number" class="form-control" id="sites_affected" name="sites_affected" placeholder="Enter number of sites affected" value="{{ $incident->sites_affected }}">
+                                                        <input type="number" class="form-control" id="sites_affected" name="sites_affected" placeholder="Enter number of sites affected" value="{{ $incident->sites_affected }}" required>
                                                     </div>
                                                 </div>
                                                 <div class="row mt-3">
                                                     <div class="col-md-6">
                                                         <label for="systems_affected" class="form-label">Approximate number of systems affected by the incident:</label>
-                                                        <input type="number" class="form-control" id="systems_affected" name="systems_affected" placeholder="Enter number of systems affected" value="{{ $incident->systems_affected }}">
+                                                        <input type="number" class="form-control" id="systems_affected" name="systems_affected" placeholder="Enter number of systems affected" value="{{ $incident->systems_affected }}" required>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label for="users_affected" class="form-label">Approximate number of users affected by the incident:</label>
-                                                        <input type="number" class="form-control" id="users_affected" name="users_affected" placeholder="Enter number of users affected" value="{{ $incident->users_affected }}">
+                                                        <input type="number" class="form-control" id="users_affected" name="users_affected" placeholder="Enter number of users affected" value="{{ $incident->users_affected }}" required>
                                                     </div>
                                                 </div>
                                                 <div class="row mt-3">

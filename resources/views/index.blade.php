@@ -60,11 +60,6 @@
                                                            class="px-4 py-2 text-white text-sm rounded-md shadow bg-black">
                                                            Edit
                                                         </a>
-                                                    @else
-                                                        <button class="px-4 py-2 text-white bg-black text-sm rounded-md shadow cursor-not-allowed"
-                                                                onclick="alert('You are not allowed to edit this incident.')">
-                                                            Edit
-                                                        </button>
                                                     @endif
                                                 </td>   
                                                 <td class="px-6 py-3">
@@ -83,11 +78,6 @@
                                                                 Delete
                                                             </button>
                                                         </form>
-                                                    @else
-                                                        <button class="px-4 py-2 bg-red-600 text-white text-sm rounded-md shadow hover:bg-red-800 transition cursor-not-allowed"
-                                                                onclick="alert('You are not allowed to delete this incident.')">
-                                                            Delete
-                                                        </button>
                                                     @endif
                                                 </td>
                                             </tr>                
@@ -136,7 +126,7 @@
         document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.delete-form').forEach(form => {
         form.addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent immediate form submission
+            event.preventDefault(); 
             if (confirm('Are you sure you want to delete this incident?')) {
                 this.submit();
             }
