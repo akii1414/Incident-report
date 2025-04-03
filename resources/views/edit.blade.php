@@ -100,8 +100,8 @@
                                         </div>
                                         <div class="border p-3 mb-4">
                                             <h6 class="mb-3"><strong>IV.</strong> Who else has been notified? (Please provide name of person/s)</h6>
-                                            <input type="text" class="form-control" id="description" name="description" value="{{ $incident->description }}" placeholder="Enter names...">
-                                        </div>
+                                            <textarea class="form-control" id="description" name="description" rows="3" placeholder="Enter names, one per line...">{{ old('description', $incident->description) }}</textarea>
+                                        </div>                                        
                                         <div class="border p-3 mb-4">
                                             <h6 class="mb-3"><strong>V.</strong> What Steps Have Been Taken?</h6>
                                             @php
@@ -128,7 +128,7 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <label for="incident_discovery_time" class="form-label">Date & Time Discovered:</label>
-                                                    <input type="datetime-local" class="form-control" id="incident_discovery_time" name="incident_discovery_time" required>
+                                                    <input type="datetime-local" class="form-control" id="incident_discovery_time" name="incident_discovery_time" >
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="incident_resolved" class="form-label">Has the incident been resolved?</label>
@@ -172,29 +172,29 @@
                                                 <div class="row mt-3">
                                                     <div class="col-md-6">
                                                         <label for="location" class="form-label">Physical location of affected system(s):</label>
-                                                        <input type="text" class="form-control" id="location" name="location" placeholder="Enter physical location" value="{{ $incident->location }}" required>
+                                                        <input type="text" class="form-control" id="location" name="location" placeholder="Enter physical location" value="{{ $incident->location ?? 'N/A' }}">
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label for="sites_affected" class="form-label">Number of sites affected by the incident:</label>
-                                                        <input type="number" class="form-control" id="sites_affected" name="sites_affected" placeholder="Enter number of sites affected" value="{{ $incident->sites_affected }}" required>
+                                                        <input type="number" class="form-control" id="sites_affected" name="sites_affected" placeholder="Enter number of sites affected" value="{{ $incident->sites_affected ?? 'N/A' }}">
                                                     </div>
                                                 </div>
                                                 <div class="row mt-3">
                                                     <div class="col-md-6">
                                                         <label for="systems_affected" class="form-label">Approximate number of systems affected by the incident:</label>
-                                                        <input type="number" class="form-control" id="systems_affected" name="systems_affected" placeholder="Enter number of systems affected" value="{{ $incident->systems_affected }}" required>
+                                                        <input type="number" class="form-control" id="systems_affected" name="systems_affected" placeholder="Enter number of systems affected" value="{{ $incident->systems_affected ?? 'N/A' }}">
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label for="users_affected" class="form-label">Approximate number of users affected by the incident:</label>
-                                                        <input type="number" class="form-control" id="users_affected" name="users_affected" placeholder="Enter number of users affected" value="{{ $incident->users_affected }}" required>
+                                                        <input type="number" class="form-control" id="users_affected" name="users_affected" placeholder="Enter number of users affected" value="{{ $incident->users_affected ?? 'N/A' }}">
                                                     </div>
                                                 </div>
                                                 <div class="row mt-3">
                                                     <div class="col-md-6">
                                                         <label for="additional_info" class="form-label">Additional Information:</label>
-                                                        <input type="text" class="form-control" id="additional_info" name="additional_info" rows="3" placeholder="Enter additional details..." value="{{ $incident->additional_info }}">
+                                                        <input type="text" class="form-control" id="additional_info" name="additional_info" placeholder="Enter additional details..." value="{{ $incident->additional_info ?? 'N/A' }}">
                                                     </div>
-                                                </div>
+                                                </div>                                                
                                             </div> 
                                         </div>
                                         <div class="col text-end">

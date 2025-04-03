@@ -112,10 +112,9 @@
                                             </div>
                                         </div>
                                         <div class="border p-3 mb-4">
-                                            <h6 class="mb-3"><strong>IV.</strong> Who else have been notified? (Please provide name of person/s)</h6>
-                                                <label for="description" class="form-label"></label>
-                                                <input type="text" class="form-control" id="description" name="description" rows="3" placeholder="Enter a description..." required>
-                                        </div>
+                                            <h6 class="mb-3"><strong>IV.</strong> Who else has been notified? (Please provide the names of persons)</h6>
+                                            <textarea class="form-control" id="names" name="names" rows="3" placeholder="Enter names, one per line..." required></textarea>
+                                        </div>                                        
                                         <div class="border p-3 mb-4">
                                             <h6 class="mb-3"><strong>V.</strong> What Steps Have Been Taken?</h6>
                                             <div class="form-check">
@@ -190,22 +189,22 @@
                                             <div class="row mt-3">
                                                 <div class="col-md-6">
                                                     <label for="location" class="form-label">Physical location of affected system(s):</label>
-                                                    <input type="text" class="form-control" id="location" name="location" placeholder="Enter physical location" required>
+                                                    <input type="text" class="form-control" id="location" name="location" placeholder="Enter physical location" >
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="sites_affected" class="form-label">Number of sites affected by the incident:</label>
-                                                    <input type="number" class="form-control" id="sites_affected" name="sites_affected" placeholder="Enter number of sites affected" required>
+                                                    <input type="number" class="form-control" id="sites_affected" name="sites_affected" placeholder="Enter number of sites affected" >
                                                 </div>
                                             </div>
                                         
                                             <div class="row mt-3">
                                                 <div class="col-md-6">
                                                     <label for="systems_affected" class="form-label">Approximate number of systems affected by the incident:</label>
-                                                    <input type="number" class="form-control" id="systems_affected" name="systems_affected" placeholder="Enter number of systems affected" required>
+                                                    <input type="number" class="form-control" id="systems_affected" name="systems_affected" placeholder="Enter number of systems affected" >
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="users_affected" class="form-label">Approximate number of users affected by the incident:</label>
-                                                    <input type="number" class="form-control" id="users_affected" name="users_affected" placeholder="Enter number of users affected" required>
+                                                    <input type="number" class="form-control" id="users_affected" name="users_affected" placeholder="Enter number of users affected" >
                                                 </div>
                                             </div>
                                         

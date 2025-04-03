@@ -38,23 +38,23 @@ class IncidentController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'description' => 'nullable|string|max:1000',
-            'subject' => 'nullable|string|max:1000',
+            'description' => 'nullable|string|max:10000',
+            'subject' => 'nullable|string|max:10000',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'image_descriptions.*' => 'nullable|string|max:255',
+            'image_descriptions.*' => 'nullable|string|max:10000',
             'impact' => 'nullable|array',
             'steps' => 'nullable|array',
-            'other_steps_description' => 'nullable|string|max:1000',
+            'other_steps_description' => 'nullable|string|max:10000',
             'incident_discovery_time' => 'required|date',
             'incident_resolved' => 'nullable|in:Yes,No',
             'location' => 'nullable|string|max:255',
             'sites_affected' => 'nullable|integer|min:0',
             'systems_affected' => 'nullable|integer|min:0',
             'users_affected' => 'nullable|integer|min:0',
-            'additional_info' => 'nullable|string|max:1000',
+            'additional_info' => 'nullable|string|max:10000',
             'ongoing_time' => 'nullable|date|required_if:incident_resolved,No', 
             'incident_reason' => 'nullable|array|required_if:incident_resolved,No', 
-            'other_description_ongoing' => 'nullable|string|max:1000|required_if:incident_reason,Other', 
+            'other_description_ongoing' => 'nullable|string|max:10000|required_if:incident_reason,Other', 
         ]);
 
         $steps = $request->steps ?? [];
@@ -84,7 +84,7 @@ class IncidentController extends Controller
             'sites_affected' => $request->sites_affected ?? 0,
             'systems_affected' => $request->systems_affected ?? 0,
             'users_affected' => $request->users_affected ?? 0,
-            'additional_info' => $request->additional_info ?? null,
+            'additional_info' => $request->additional_info ?: 'N/A',
             'other_steps_description' => $other_steps,
             'ongoing_time' => $request->incident_resolved === 'No' ? $request->ongoing_time : null, 
             'incident_reason' => json_encode($unresolvedReasons), 
@@ -134,23 +134,23 @@ class IncidentController extends Controller
         }
     
         $validated = $request->validate([
-            'subject' => 'nullable|string|max:1000',
-            'description' => 'nullable|string|max:1000',
+            'subject' => 'nullable|string|max:10000',
+            'description' => 'nullable|string|max:10000',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'image_descriptions.*' => 'nullable|string|max:255',
+            'image_descriptions.*' => 'nullable|string|max:10000',
             'impact' => 'nullable|array',
             'steps' => 'nullable|array',
-            'other_steps_description' => 'nullable|string|max:1000',
+            'other_steps_description' => 'nullable|string|max:10000',
             'incident_resolved' => 'nullable|in:Yes,No',
             'location' => 'nullable|string|max:255',
             'sites_affected' => 'nullable|integer|min:0',
             'systems_affected' => 'nullable|integer|min:0',
             'users_affected' => 'nullable|integer|min:0',
-            'additional_info' => 'nullable|string|max:1000',
+            'additional_info' => 'nullable|string|max:10000',
             'incident_discovery_time' => 'nullable|date',
             'ongoing_time' => 'nullable|date|required_if:incident_resolved,No', 
             'incident_reason' => 'nullable|array|required_if:incident_resolved,No', 
-            'other_description_ongoing' => 'nullable|string|max:1000|required_if:incident_reason,Other', 
+            'other_description_ongoing' => 'nullable|string|max:10000|required_if:incident_reason,Other', 
         ]);
     
         $steps = $request->steps ?? [];
@@ -185,9 +185,15 @@ class IncidentController extends Controller
         }
     
         $incidentResolved = $validated['incident_resolved'] ?? $incident_details->incident_resolved;
-        $ongoingTime = isset($validated['incident_resolved']) && $validated['incident_resolved'] === 'No' 
-            ? ($validated['ongoing_time'] ?? null) 
-            : null;
+        $ongoingTime = $incident_details->ongoing_time; 
+        if (isset($validated['incident_resolved'])) {
+            if ($validated['incident_resolved'] === 'No') {
+                $ongoingTime = $validated['ongoing_time'] ?? $incident_details->ongoing_time;
+            } else {
+                $ongoingTime = null; 
+            }
+        }
+        
     
         $incident_details->update([
             'subject' => $validated['subject'] ?? $incident_details->subject,
@@ -232,6 +238,8 @@ class IncidentController extends Controller
         $incident_details = Incident::findOrFail($id); 
         $incident_details->impact = json_decode($incident_details->impact, true);
         $incident_details->steps = json_decode($incident_details->steps, true);
+        $incident_details->names = array_map('trim', explode(',', $incident_details->description));
+
         $pdf = PDF::loadView('pdf.incident_report', ['data' => $incident_details]);
         $pdf->setPaper('A4', 'portrait');
         return $pdf->stream();

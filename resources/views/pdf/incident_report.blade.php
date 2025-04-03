@@ -344,15 +344,21 @@
               <br>
               <table class="table-notified">
                 <tr>
-                  <th colspan="3">IV. Who else have been notified? </th>
-                </tr>
-                  <tr>
-                  <td colspan="3">Please provide name of person/s:</td>
+                    <th colspan="3">IV. Who else has been notified?</th>
                 </tr>
                 <tr>
-                  <td class="text-red"  colspan="3">{{ $data['description'] }}</td>
+                    <td colspan="3">Please provide the names of persons:</td>
                 </tr>
-              </table>
+                <tr>
+                    <td colspan="3">
+                        <ul>
+                            @foreach($data['names'] as $name)
+                                <li class="text-red">{{ $name }}</li>
+                            @endforeach
+                        </ul>
+                    </td>
+                </tr>
+            </table>
               <br>
               <table class="table-steps">
                 <tr>
